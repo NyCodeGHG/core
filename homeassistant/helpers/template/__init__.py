@@ -23,7 +23,6 @@ from types import CodeType
 from typing import TYPE_CHECKING, Any, Concatenate, Literal, NoReturn, Self, overload
 import weakref
 
-from awesomeversion import AwesomeVersion
 import jinja2
 from jinja2 import pass_context, pass_eval_context
 from jinja2.runtime import AsyncLoopContext, LoopContext
@@ -1532,11 +1531,6 @@ def as_function(macro: jinja2.runtime.Macro) -> Callable[..., Any]:
     return wrapper
 
 
-def version(value):
-    """Filter and function to get version object of the value."""
-    return AwesomeVersion(value)
-
-
 def merge_response(value: ServiceResponse) -> list[Any]:
     """Merge action responses into single list.
 
@@ -1944,6 +1938,7 @@ class TemplateEnvironment(ImmutableSandboxedEnvironment):
         self.add_extension("homeassistant.helpers.template.extensions.MathExtension")
         self.add_extension("homeassistant.helpers.template.extensions.RegexExtension")
         self.add_extension("homeassistant.helpers.template.extensions.StringExtension")
+        self.add_extension("homeassistant.helpers.template.extensions.VersionExtension")
 
         self.globals["apply"] = apply
         self.globals["as_function"] = as_function
@@ -1957,7 +1952,6 @@ class TemplateEnvironment(ImmutableSandboxedEnvironment):
         self.globals["pack"] = struct_pack
         self.globals["typeof"] = typeof
         self.globals["unpack"] = struct_unpack
-        self.globals["version"] = version
         self.globals["zip"] = zip
 
         self.filters["add"] = add
@@ -1981,7 +1975,6 @@ class TemplateEnvironment(ImmutableSandboxedEnvironment):
         self.filters["to_json"] = to_json
         self.filters["typeof"] = typeof
         self.filters["unpack"] = struct_unpack
-        self.filters["version"] = version
 
         self.tests["apply"] = apply
         self.tests["contains"] = contains
